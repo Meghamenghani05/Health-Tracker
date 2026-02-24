@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const analyzeHealthWithAI = async (healthData) => {
   const response = await axios.post(
-    "http://localhost:8000/analyze",
+    "https://health-tracker-2-nmlm.onrender.com/analyze",
     healthData,
     { headers: { "Content-Type": "application/json" } }
   );
