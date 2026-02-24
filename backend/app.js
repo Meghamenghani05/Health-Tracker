@@ -7,10 +7,12 @@ const aiRoutes = require("./routes/ai.routes");
 
 const app = express();
 
-/* ✅ CORS — FIXED FOR VITE (5173) */
 app.use(cors({
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST"],
+  origin: [
+    "https://health-tracker-six-sigma.vercel.app",
+    "http://localhost:3000"
+  ],
+  credentials: true
 }));
 
 /* ✅ Body parser */
