@@ -1,4 +1,4 @@
-const API_BASE = "https://health-tracker-2-nmlm.onrender.com";
+const API_BASE = "https://healthtracker-l79c.onrender.com";
 
 /* ================= UPLOAD CSV ================= */
 export const uploadCSV = async (formData) => {
@@ -8,11 +8,10 @@ export const uploadCSV = async (formData) => {
     throw new Error("Not authenticated. Please login again.");
   }
 
-  const res = await fetch("http://localhost:5000/api/upload", {
+  const res = await fetch(`${API_BASE}/api/upload`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      
     },
     body: formData
   });
@@ -25,10 +24,9 @@ export const uploadCSV = async (formData) => {
   return res.json();
 };
 
-
 /* ================= AUTH ================= */
 export const loginUser = async (data) => {
-  const res = await fetch("http://localhost:5000/api/auth/login", {
+  const res = await fetch(`${API_BASE}/api/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -42,14 +40,13 @@ export const loginUser = async (data) => {
     throw new Error(result.error || "Login failed");
   }
 
-  // 🔥 STORE TOKEN FROM RESPONSE (NOT request)
   localStorage.setItem("token", result.token);
 
   return result;
 };
 
 export const signupUser = async (data) => {
-  const res = await fetch(`${API_BASE}/auth/signup`, {
+  const res = await fetch(`${API_BASE}/api/auth/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -67,7 +64,7 @@ export const fetchData = async () => {
     throw new Error("No token found in localStorage");
   }
 
-  const res = await fetch("http://localhost:5000/api/data", {
+  const res = await fetch(`${API_BASE}/api/data`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -77,17 +74,18 @@ export const fetchData = async () => {
 
   if (!res.ok) {
     const text = await res.text();
-    console.error("Fetch error:", text); // Debug output
+    console.error("Fetch error:", text);
     throw new Error(text || "Failed to fetch data");
   }
 
   return res.json();
 };
+
 /* ================= AI INSIGHTS ================= */
 export const fetchAIInsights = async () => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API_BASE}/ai-insights`, {
+  const res = await fetch(`${API_BASE}/api/ai-insights`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -98,7 +96,7 @@ export const fetchAIInsights = async () => {
   const data = await res.json();
 
   if (!res.ok) {
-    console.error("AI Insights fetch error:", data); // Debug output
+    console.error("AI Insights fetch error:", data);
     throw new Error(data.error || "Failed to fetch AI insights");
   }
 

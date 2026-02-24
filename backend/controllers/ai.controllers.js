@@ -6,6 +6,8 @@ exports.getAIInsights = async (req, res) => {
     const data = await WearableData.find({id:req.userId});
 
     if (!data.length) {
+
+      
       return res.json({
         risk_score: 0,
         risk_level: "Low",
