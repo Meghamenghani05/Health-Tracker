@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://health-tracker-2-nmlm.onrender.com";
 
 /* ================= UPLOAD CSV ================= */
 export const uploadCSV = async (formData) => {
