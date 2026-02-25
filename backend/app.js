@@ -7,7 +7,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // local dev
-      "https://health-tracker-gamma-one.vercel.app"
+      "https://health-tracker-gamma-one.vercel.app",
+      "http://localhost:3000"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
