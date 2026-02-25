@@ -3,13 +3,16 @@ const cors = require("cors");
 
 const app = express();   // ✅ create app first
 
-app.use(cors({
-  origin: [
-    "https://health-tracker-six-sigma.vercel.app",
-    "http://localhost:3000"
-  ],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local dev
+      "https://health-tracker-gamma-one.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  })
+);
 
 app.use(express.json());
 
