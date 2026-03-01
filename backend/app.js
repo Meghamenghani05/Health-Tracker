@@ -6,15 +6,15 @@ const app = express();   // ✅ create app first
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // local dev
+      "http://localhost:5173",
       "https://health-tracker-gamma-one.vercel.app",
       "http://localhost:3000"
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
   })
 );
-
+app.options("*", cors());
 app.use(express.json());
 
 const uploadRoutes = require("./routes/upload.routes");
