@@ -85,8 +85,8 @@ export const fetchData = async () => {
 export const fetchAIInsights = async () => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API_BASE}/api/ai-insights`, {
-    method: "GET",
+  const res = await fetch(`${API_BASE}/api/analyze`, {
+    method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json"

@@ -1,13 +1,27 @@
 const axios = require("axios");
+const mongoose = require("mongoose");
 const WearableData = require("../models/WearableData");
 
 exports.getAIInsights = async (req, res) => {
   try {
-    const data = await WearableData.find({id:req.userId});
+    console.log("REQ.USERID:", req.userId);
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        risk_score: "N/A",
+        risk_level: "Unauthorized",
+        insights: ["User not authenticated"]
+      });
+    }
+
+    // ✅ DO NOT force ObjectId unless needed
+    const data = await WearableData.find({
+      user: req.user.id
+    }).lean();
+    
+    console.log("DATA LENGTH:", data.length);
 
     if (!data.length) {
-
-      
       return res.json({
         risk_score: 0,
         risk_level: "Low",
@@ -15,29 +29,38 @@ exports.getAIInsights = async (req, res) => {
       });
     }
 
-    // 🔴 CLEAN DATA (VERY IMPORTANT)
     const cleanData = data.map(d => ({
-      heartRate: Number(d.heartRate),
-      steps: Number(d.steps),
-      sleepHours: Number(d.sleepHours)
+      heartRate: Number(d.heartRate) || 0,
+      steps: Number(d.steps) || 0,
+      sleepHours: Number(d.sleepHours) || 0
     }));
 
-    // 🔴 CALL PYTHON AI
-    const aiResponse = await axios.post(
-      "https://health-tracker-2-nmlm.onrender.com/analyze",
-      cleanData,
-      { timeout: 10000 }
-    );
+    let aiResponse;
 
+    try {
+      aiResponse = await axios.post(
+         "https://health-tracker-2-nmlm.onrender.com/analyze",
+        cleanData,
+        { timeout: 60000 }
+      );
+    } catch (aiError) {
+      console.error("AI SERVICE ERROR:", aiError.response?.data || aiError.message);
 
-    res.json(aiResponse.data);
+      return res.json({
+        risk_score: "N/A",
+        risk_level: "Service Down",
+        insights: ["AI service temporarily unavailable"]
+      });
+    }
+
+    return res.json(aiResponse.data);
 
   } catch (err) {
-    console.error("AI ERROR:", err.message);
-    res.status(500).json({
+    console.error("BACKEND CRASH:", err);
+    return res.status(500).json({
       risk_score: "N/A",
       risk_level: "N/A",
-      insights: ["AI service unavailable"]
+      insights: ["Internal server error"]
     });
   }
 };
