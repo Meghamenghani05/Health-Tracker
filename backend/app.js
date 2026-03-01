@@ -1,8 +1,10 @@
+// app.js
 const express = require("express");
 const cors = require("cors");
 
-const app = express();   // ✅ create app first
+const app = express();
 
+// CORS middleware
 app.use(
   cors({
     origin: [
@@ -14,7 +16,19 @@ app.use(
     credentials: true
   })
 );
-app.options("*", cors());
+
+// Handle all OPTIONS requests for CORS preflight
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.sendStatus(204);
+  } else {
+    next();
+  }
+});
+
 app.use(express.json());
 
 const uploadRoutes = require("./routes/upload.routes");
