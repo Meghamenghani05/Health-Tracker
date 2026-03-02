@@ -4,6 +4,7 @@ import DataList from "./components/DataList";
 import AIInsights from "./components/AIInsights";
 import Auth from "./components/Auth";
 import { fetchData } from "./services/api";
+import HealthCharts from "./components/Healthcharts";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
@@ -134,6 +135,7 @@ function App() {
           <div className="card">
             <div className="card-title">Upload Health Data</div>
             <UploadForm onUpload={loadData} />
+            <HealthCharts data={data} />
           </div>
 
           <div className="card">
